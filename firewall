@@ -9,14 +9,14 @@ PSK="MySuperSecretKey!"
 PROPOSAL="aes256-sha256"
 DH_GROUP="14"
 KEYLIFE="28800"
-NAT_TRAVERSAL="enable"   # "enable" o "disable"
+NAT_TRAVERSAL="disable"   # Cambia a "enable" si se requiere NAT-T
 
 # Phase 2
-PH2_NAME="${phase-2-vpn-bcp}_p2"
+PH2_NAME="phase-2-vpn-qas"
 PH2_PROPOSAL="aes256-sha256"
 PH2_DH_GROUP="14"
 PH2_KEYLIFE="3600"
-SRC_SUBNET="0.0.0.0 0.0.0.0"      # usa 0.0.0.0/0 si no quieres limitar subredes
+SRC_SUBNET="0.0.0.0 0.0.0.0"      # Usa 0.0.0.0/0 si no quieres limitar subredes
 DST_SUBNET="0.0.0.0 0.0.0.0"
 
 # ========================
@@ -35,7 +35,7 @@ config vpn ipsec phase1-interface
         set dpd on-idle
         set remote-gw "$REMOTE_GW"
         set psksecret "$PSK"
-#       set nattraversal "$NAT_TRAVERSAL"    # comentar esta línea si no se requiere NAT-T
+        set nattraversal "$NAT_TRAVERSAL"    # Cambiar a "enable" o comentar si no se requiere
     next
 end
 
