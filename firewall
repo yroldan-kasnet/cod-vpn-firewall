@@ -1,0 +1,52 @@
+# ========================
+# VARIABLES
+# ========================
+# Phase 1
+VPN_NAME="s2s-bcp-qas"
+INTERFACE="wan2"
+REMOTE_GW="18.234.1.193"
+PSK="MySuperSecretKey!"
+PROPOSAL="aes256-sha256"
+DH_GROUP="14"
+KEYLIFE="28800"
+NAT_TRAVERSAL="enable"   # "enable" o "disable"
+
+# Phase 2
+PH2_NAME="${phase-2-vpn-bcp}_p2"
+PH2_PROPOSAL="aes256-sha256"
+PH2_DH_GROUP="14"
+PH2_KEYLIFE="3600"
+SRC_SUBNET="0.0.0.0 0.0.0.0"      # usa 0.0.0.0/0 si no quieres limitar subredes
+DST_SUBNET="0.0.0.0 0.0.0.0"
+
+# ========================
+# CONFIGURACIÓN FORTIGATE
+# ========================
+
+config vpn ipsec phase1-interface
+    edit "$VPN_NAME"
+        set interface "$INTERFACE"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set proposal "$PROPOSAL"
+        set dhgrp "$DH_GROUP"
+        set keylife "$KEYLIFE"
+        set dpd on-idle
+        set remote-gw "$REMOTE_GW"
+        set psksecret "$PSK"
+#       set nattraversal "$NAT_TRAVERSAL"    # comentar esta línea si no se requiere NAT-T
+    next
+end
+
+config vpn ipsec phase2-interface
+    edit "$PH2_NAME"
+        set phase1name "$VPN_NAME"
+        set proposal "$PH2_PROPOSAL"
+        set dhgrp "$PH2_DH_GROUP"
+        set keylifeseconds "$PH2_KEYLIFE"
+        set src-subnet $SRC_SUBNET
+        set dst-subnet $DST_SUBNET
+        set auto-negotiate enable
+    next
+end
